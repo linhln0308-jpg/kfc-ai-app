@@ -1,0 +1,18 @@
+<select id="customerId"></select>
+
+<script>
+    // Gọi n8n để lấy danh sách khách hàng
+    fetch("https://linhngoc.app.n8n.cloud/webhook/check-allergy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_list" })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const select = document.getElementById('customerId');
+        // data là mảng khách hàng từ Google Sheets
+        select.innerHTML = data.map(c => 
+            `<option value="${c.customer_id}">${c.name}</option>`
+        ).join('');
+    });
+</script>

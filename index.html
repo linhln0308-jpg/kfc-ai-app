@@ -40,18 +40,4 @@
         }
     </script>
 </body>
-</html>
-async function checkData() {
-    const res = await fetch("YOUR_PRODUCTION_URL_HERE", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerId: document.getElementById('customerId').value })
-    });
-    
-    // Kiểm tra xem phản hồi có phải là JSON không
-    if (!res.ok) throw new Error('Network response was not ok');
-    const data = await res.json();
-    
-    // Hiển thị kết quả
-    document.getElementById("result").innerText = data.output || "Không có phản hồi từ AI";
-}
+

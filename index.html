@@ -1,43 +1,31 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>KFC AI Nutrition Check</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding: 20px; background: #f4f4f4; }
-        .box { background: white; padding: 20px; border-radius: 8px; width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        select, button { width: 100%; padding: 10px; margin: 10px 0; }
-        #result { margin-top: 15px; padding: 10px; border: 1px solid #ddd; min-height: 50px; }
-    </style>
-</head>
+<html>
 <body>
-    <div class="box">
-        <h2>KFC AI Nutrition Check</h2>
-        <select id="customerId"><option>Đang tải...</option></select>
-        <button onclick="check()">Kiểm tra dị ứng</button>
-        <div id="result"></div>
-    </div>
+    <h2>KFC AI Nutrition Check</h2>
+    <select id="customerId"><option>Đang tải...</option></select>
+    <button onclick="checkData()">Kiểm tra</button>
+    <div id="result"></div>
 
     <script>
         const WEBHOOK_URL = "https://linhngoc.app.n8n.cloud/webhook/check-allergy";
 
-        // Tự động load danh sách khách hàng
-        fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify({ action: 'getList' }) })
+        // Tự động tải danh sách khách hàng từ n8n
+        fetch(WEBHOOK_URL, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ action: "getList" }) })
             .then(res => res.json())
             .then(data => {
-                const select = document.getElementById('customerId');
+                const select = document.getElementById("customerId");
                 select.innerHTML = data.map(c => `<option value="${c.customer_id}">${c.name}</option>`).join('');
             });
 
-        // Hàm kiểm tra
-        async function check() {
+        async function checkData() {
             const res = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'checkAllergy', customerId: document.getElementById('customerId').value })
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ action: "check", customerId: document.getElementById("customerId").value })
             });
             const data = await res.json();
-            document.getElementById('result').innerText = data.message;
+            document.getElementById("result").innerText = data.message;
         }
     </script>
 </body>
-
+</html>

@@ -7,19 +7,21 @@
     <div id="result"></div>
 
     <script>
-        const WEBHOOK_URL = "https://linhngoc.app.n8n.cloud/webhook/check-allergy";
-
-        // Tự động tải danh sách khách hàng từ n8n
-        fetch(WEBHOOK_URL, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ action: "getList" }) })
-            .then(res => res.json())
-            .then(data => {
-                const select = document.getElementById("customerId");
-                select.innerHTML = data.map(c => `<option value="${c.customer_id}">${c.name}</option>`).join('');
-            });
-
-        async function checkData() {
-            const res = await fetch(WEBHOOK_URL, {
-                method: "POST",
+        async function sendAction(actionValue, customerId = "") {
+    try {
+        const response = await fetch("https://linhngoc.app.n8n.cloud/webhook/check-allergy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                action: actionValue, 
+                customerId: customerId 
+            })
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Lỗi:", error);
+    }
+}
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ action: "check", customerId: document.getElementById("customerId").value })
             });
